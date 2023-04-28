@@ -1,8 +1,22 @@
 #ifndef __GARBAGE_H__
 
 #define __GARBAGE_H__
-#define G_GET 0
-#define G_SET 1
+
+/**
+ * enum storage_action - the global storage action
+ * @A_GET: load stored object from the global storage
+ * @A_SET: store an object inside the global storage
+ */
+enum storage_action
+{ A_GET, A_SET };
+
+/**
+ * enum scope - the scope of the garbage functions
+ * @S_GLOBAL: use global scope
+ * @S_SCOPED: use scoped object
+ */
+enum scope
+{ S_GLOBAL, S_SCOPED };
 
 /**
  * struct garbage_s - a linked list struct to hold list of the traced pointers
@@ -15,11 +29,18 @@ typedef struct garbage_s
 	struct garbage_s *next;
 } *garbage;
 
-
-garbage garbage_global(garbage gb, char mode);
-int garbage_trace(void *ptr);
-void garbage_untrace(void *ptr);
-void garbage_free(void);
+garbage garbage_global(garbage gb, enum storage_action mode);
+int garbage_trace(garbage *scope, enum scope mode, void *ptr);
+void garbage_untrace(garbage *scope, enum scope mode, void *ptr);
+void garbage_free(garbage *scope, enum scope mode);
 garbage garbage_last(garbage gb);
+
+int global_trace(void *ptr);
+void global_untrace(void *ptr);
+void global_free(void);
+
+int scoped_trace(garbage *scope, void *ptr);
+void scoped_untrace(garbage *scope, void *ptr);
+void scoped_free(garbage *scope);
 
 #endif
