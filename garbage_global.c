@@ -9,7 +9,7 @@
  */
 int global_trace(void *ptr)
 {
-	return (garbage_trace((void *)0, S_GLOBAL, ptr));
+	return (garbage_trace(NULL, S_GLOBAL, ptr));
 }
 
 /**
@@ -18,7 +18,7 @@ int global_trace(void *ptr)
  */
 void global_untrace(void *ptr)
 {
-	garbage_untrace((void *)0, S_GLOBAL, ptr);
+	garbage_untrace(NULL, S_GLOBAL, ptr);
 }
 
 /**
@@ -26,7 +26,7 @@ void global_untrace(void *ptr)
  */
 void global_free(void)
 {
-	garbage_free((void *)0, S_GLOBAL);
+	garbage_free(NULL, S_GLOBAL);
 }
 
 /**
@@ -37,7 +37,7 @@ void global_free(void)
  */
 int global_has(void *ptr)
 {
-	garbage gb = garbage_global((void *)0, A_GET);
+	garbage gb = garbage_global(NULL, A_GET);
 
 	if (!ptr)
 		return (0);
@@ -48,4 +48,25 @@ search:
 		return (1);
 	gb = gb->next;
 	goto search;
+}
+
+/**
+ * global_bind - bind a scope to the global tracing scope
+ * @scope: the scope object to bind
+ */
+void global_bind(garbage *scope)
+{
+	garbage head = NULL;
+	int already_globaled;
+
+	if (!scope || !*scope)
+		return;
+	head = garbage_global(NULL, A_GET);
+	already_globaled = global_has((*scope)->ptr);
+	if (!already_globaled && head)
+		garbage_last(head)->next = *scope;
+	else if (!already_globaled && !head)
+		garbage_global(*scope, A_SET);
+
+	*scope = NULL;
 }

@@ -54,3 +54,23 @@ search:
 	gb = gb->next;
 	goto search;
 }
+
+/**
+ * scoped_bind - bind @src scope to the @dest scope and NULL the @src one
+ * @dest_scope: the scope to copy to its end
+ * @src_scope: the scope to copy from
+ */
+void scoped_bind(garbage *dest_scope, garbage *src_scope)
+{
+	int already_binded;
+
+	if (!dest_scope || !src_scope || !*src_scope)
+		return;
+
+	already_binded = scoped_has(dest_scope, (*src_scope)->ptr);
+	if (!already_binded && !*dest_scope)
+		*dest_scope = *src_scope;
+	else if (!already_binded && *dest_scope)
+		garbage_last(*dest_scope)->next = *src_scope;
+	*src_scope = NULL;
+}
