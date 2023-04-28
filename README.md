@@ -17,7 +17,9 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g ../garbage*.c <example file>
 - `global.c`: How to use global tracing
 - `scoped.c`: How to use scoped tracing
 - `mixed.c`: How to use both global and scoped tracing
+- `binging.c`: How to use both global and scoped binging
 - `untrace.c`: How to use both global and scoped untrace
+
 ## Usage
 
 ### Trace
@@ -40,9 +42,17 @@ void scoped_untrace(garbage *scope, void *ptr);
 void global_untrace(void *ptr);
 ```
 
+### Binding
 
+- Bind or add tracers from scope to another and destroy the source scope.
+- Also bind or add tracers from scope to global scope and destroy the source.
 
+> Returns: `0` on fail and `1` on success
 
+```c
+void scoped_bind(global_scope *dest, global_trace *src);
+void global_bind(global_trace *scope);
+```
 
 ### Free
 

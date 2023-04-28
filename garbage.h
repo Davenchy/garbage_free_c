@@ -2,6 +2,10 @@
 
 #define __GARBAGE_H__
 
+#ifndef NULL
+#define NULL (void *)0
+#endif
+
 /**
  * enum storage_action - the global storage action
  * @A_GET: load stored object from the global storage
@@ -38,11 +42,13 @@ garbage garbage_last(garbage gb);
 int global_trace(void *ptr);
 void global_untrace(void *ptr);
 void global_free(void);
+void global_bind(garbage *scope);
 int global_has(void *ptr);
 
 int scoped_trace(garbage *scope, void *ptr);
 void scoped_untrace(garbage *scope, void *ptr);
 void scoped_free(garbage *scope);
+void scoped_bind(garbage *dest_scope, garbage *src_scope);
 int scoped_has(garbage *scope, void *ptr);
 
 #endif
