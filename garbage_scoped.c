@@ -31,3 +31,26 @@ void scoped_free(garbage *scope)
 {
 	garbage_free(scope, S_SCOPED);
 }
+
+/**
+ * scoped_has - check if scope is tracing a pointer
+ * @scope: pointer to the scope object
+ * @ptr: the pointer to check
+ *
+ * Return: 1 if found otherwise 0
+ */
+int scoped_has(garbage *scope, void *ptr)
+{
+	garbage gb;
+
+	if (!scope || !ptr)
+		return (0);
+	gb = *scope;
+search:
+	if (!gb)
+		return (0);
+	if (gb->ptr == ptr)
+		return (1);
+	gb = gb->next;
+	goto search;
+}

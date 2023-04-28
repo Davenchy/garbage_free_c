@@ -38,9 +38,11 @@ garbage garbage_last(garbage gb);
 int global_trace(void *ptr);
 void global_untrace(void *ptr);
 void global_free(void);
+int global_has(void *ptr);
 
 int scoped_trace(garbage *scope, void *ptr);
 void scoped_untrace(garbage *scope, void *ptr);
 void scoped_free(garbage *scope);
+int scoped_has(garbage *scope, void *ptr);
 
 #endif

@@ -28,3 +28,24 @@ void global_free(void)
 {
 	garbage_free((void *)0, S_GLOBAL);
 }
+
+/**
+ * global_has - check if global scope is tracing a pointer
+ * @ptr: the pointer to check
+ *
+ * Return: 1 if found otherwise zero
+ */
+int global_has(void *ptr)
+{
+	garbage gb = garbage_global((void *)0, A_GET);
+
+	if (!ptr)
+		return (0);
+search:
+	if (!gb)
+		return (0);
+	if (gb->ptr == ptr)
+		return (1);
+	gb = gb->next;
+	goto search;
+}

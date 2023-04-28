@@ -17,6 +17,7 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g ../garbage*.c <example file>
 - `global.c`: How to use global tracing
 - `scoped.c`: How to use scoped tracing
 - `mixed.c`: How to use both global and scoped tracing
+- `untrace.c`: How to use both global and scoped untrace
 ## Usage
 
 ### Trace
@@ -50,6 +51,15 @@ void global_untrace(void *ptr);
 ```c
 void scoped_free(garbage *scope);
 void global_free(void);
+```
+
+### Has
+
+- Check if scope is tracing a pointer
+
+```c
+int scoped_has(garbage *scope, void *ptr);
+int global_has(void *ptr);
 ```
 
 ## Examples

@@ -55,7 +55,7 @@ garbage garbage_last(garbage gb)
  */
 int garbage_trace(garbage *scope, enum scope mode, void *ptr)
 {
-	garbage head, gb;
+	garbage head = NULL, gb = NULL;
 
 	if (!ptr || (mode == S_SCOPED && !scope))
 		return (0);
@@ -101,6 +101,8 @@ void garbage_free(garbage *scope, enum scope mode)
 	}
 	if (mode == S_GLOBAL)
 		garbage_global(NULL, A_SET); /* reset the global head */
+	else if (mode == S_SCOPED)
+		*scope = NULL;
 }
 
 /**
@@ -111,7 +113,7 @@ void garbage_free(garbage *scope, enum scope mode)
  */
 void garbage_untrace(garbage *scope, enum scope mode, void *ptr)
 {
-	garbage last, gb;
+	garbage last = NULL, gb = NULL;
 
 	if (!ptr || (mode == S_SCOPED && !scope))
 		return;
