@@ -63,6 +63,7 @@ int garbage_trace(garbage *scope, enum scope mode, void *ptr)
 	if (!gb) /* check if allocating failed */
 		return (0);
 	gb->ptr = ptr; /* store the pointer inside the garbage object */
+	gb->next = NULL;
 
 	/* load the current globally stored linked list head or use scope */
 	if (mode == S_GLOBAL)
@@ -96,7 +97,8 @@ void garbage_free(garbage *scope, enum scope mode)
 	{
 		curr = gb;
 		gb = gb->next;
-		free(curr->ptr); /* free the pointer */
+		if (curr->ptr != NULL)
+			free(curr->ptr); /* free the pointer */
 		free(curr); /* free the garbage object */
 	}
 	if (mode == S_GLOBAL)
