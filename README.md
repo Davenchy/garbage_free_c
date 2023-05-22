@@ -20,6 +20,51 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g ../garbage*.c <example file>
 - `binging.c`: How to use both global and scoped binging
 - `untrace.c`: How to use both global and scoped untrace
 
+#### Global Scope Example
+
+```c
+#include <stdio.h>
+#include <string.h>
+#include "garbage.h"
+
+int main(void) {
+    char *str = strdup("hello"); /* allocate some data */
+
+    global_trace(str); /* use the global scope to trace the str pointer */
+
+    printf("str: %s\n", str); /* it should print normally */
+
+    global_free(); /* free the global scope */
+
+    printf("str: %s\n", str); /* it should print garbage */
+
+    return 0;
+}
+```
+
+#### Scoped Example
+
+```c
+#include <stdio.h>
+#include <string.h>
+#include "garbage.h"
+
+int main(void) {
+    garbage scope = NULL; /* initialize the scope object to NULL */
+    char *str = strdup("hello"); /* allocate some data */
+
+    scoped_trace(&scope, str); /* trace the str pointer */
+
+    printf("str: %s\n", str); /* it should print normally */
+
+    scoped_free(&scope); /* free the scope */
+
+    printf("str: %s\n", str); /* it should print garbage now */
+
+    return 0;
+}
+```
+
 ## Usage
 
 ### Trace
@@ -67,54 +112,9 @@ void global_free(void);
 
 - Check if scope is tracing a pointer
 
+> Returns: `0` on fail and `1` on success
+
 ```c
 int scoped_has(garbage *scope, void *ptr);
 int global_has(void *ptr);
-```
-
-## Examples
-
-### Global Scope Example
-
-```c
-#include <stdio.h>
-#include <string.h>
-#include "garbage.h"
-
-int main(void) {
-    char *str = strdup("hello");
-
-    global_trace(str);
-
-    printf("str: %s\n", str);
-
-    global_free();
-
-    printf("str: %s\n", str);
-
-    return 0;
-}
-```
-
-### Scoped Example
-
-```c
-#include <stdio.h>
-#include <string.h>
-#include "garbage.h"
-
-int main(void) {
-    garbage scope = NULL;
-    char *str = strdup("hello");
-
-    scoped_trace(&scope, str);
-
-    printf("str: %s\n", str);
-
-    scoped_free(&scope);
-
-    printf("str: %s\n", str);
-
-    return 0;
-}
 ```
